@@ -34,7 +34,8 @@ def login_request(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('djangoapp:index')
+            context['message'] = "Successful LOGIN."
+            return render(request, 'djangoapp/index.html', context)
         else:
             context['message'] = "Invalid username or password."
             return render(request, 'djangoapp/login.html', context)
@@ -43,8 +44,10 @@ def login_request(request):
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
+    context = {}
     logout(request)
-    return redirect('djangoapp:index')
+    context['message'] = "Successful LOGOUT. BYE."
+    return render(request, 'djangoapp/index.html', context)
 
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):

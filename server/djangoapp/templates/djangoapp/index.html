@@ -44,6 +44,11 @@
             </ul>
         </div>
     </nav>
+    {% if message %}
+    <div class="alert alert-warning"> <!--Style the message paragraph with .alert and .alert-warning class -->
+      {{ message }}
+    </div>
+    {% endif %}
 
     <!--Add a dealer table here -->
 
