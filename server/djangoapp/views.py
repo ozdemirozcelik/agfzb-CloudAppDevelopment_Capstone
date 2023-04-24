@@ -99,9 +99,10 @@ def get_dealer_details(request, dealer_id):
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/reviews?dealerId=" + str(dealer_id)
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
+        context["reviews"] = reviews
         # Concat all dealer's short name
-        reviews_list  = []
-        reviews_list.append([review.review for review in reviews])
+        # reviews_list  = []
+        # reviews_list.append([review.review for review in reviews])
         # Return a list of dealer short name
         # return HttpResponse(reviews_list)
         return render(request, 'djangoapp/dealer_details.html', context)
