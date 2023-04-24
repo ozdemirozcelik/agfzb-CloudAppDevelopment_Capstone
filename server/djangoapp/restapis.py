@@ -93,15 +93,16 @@ def get_dealer_reviews_from_cf(url, dealerId):
         for review in json_result:
             # Get its content in `doc` object
             # Create a DealerReview object
-            review_obj = DealerReview(_id = review["_id"], _rev= review["_rev"], purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
-                                   car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
-                                   id=review["id"], name=review["name"], sentiment="neutral", dealership=review["dealership"])
-            sentiment_list = ["positive","positive","positive","positive","neutral","neutral","negative"]
-            review_obj.sentiment = random.choice(sentiment_list)
-            # review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
-            #                        car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
-            #                        id=review["id"], name=review["name"])
-            results.append(review_obj)
+            if review != "error":
+                review_obj = DealerReview(_id = review["_id"], _rev= review["_rev"], purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
+                                    car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
+                                    id=review["id"], name=review["name"], sentiment="neutral", dealership=review["dealership"])
+                sentiment_list = ["positive","positive","positive","positive","neutral","neutral","negative"]
+                review_obj.sentiment = random.choice(sentiment_list)
+                # review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
+                #                        car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
+                #                        id=review["id"], name=review["name"])
+                results.append(review_obj)
 
     return results
 

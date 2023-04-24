@@ -20,7 +20,9 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                 <li>
+                    {% if reviews %}
                     <a class="btn btn-link" href="{% url 'djangoapp:dealer_details' reviews.0.dealership %}">Reviews</a>
+                    {% endif %}
                     <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                 </li>
@@ -63,7 +65,7 @@
         </div>
     </div>
 {% else %}
-    <p>No courses are available.</p>
+    <p>No reviews are available.</p>
 {% endif %}
 
     </body>

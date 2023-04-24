@@ -109,22 +109,24 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    review={}
-    review["time"] = datetime.utcnow().isoformat()
-    review["dealership"] = 15
-    review["review"] = "This is a great car dealer"
-
-    url1 = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/reviews?dealerId=" + str(dealer_id)
-    # Get dealers from the URL
-    reviews = get_dealer_reviews_from_cf(url1, dealer_id)
-    data =  reviews[0]
-    data.review = "This is a great car dealer"
-    json_payload = json.dumps(data.__dict__)
 
     if request.user.is_authenticated:
         print("***user is authent.")
     
-    if request.method == "GET":
+
+    if request.method == 'GET':
+
+        url1 = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/reviews?dealerId=" + str(dealer_id)
+        # Get dealers from the URL
+        reviews = get_dealer_reviews_from_cf(url1, dealer_id)
+        data =  reviews[0]
+        data.review = "This is a great car dealer"
+        json_payload = json.dumps(data.__dict__)
+
+        return redirect("djangoapp:add_review", dealer_id=dealer_id)
+
+    elif request.method == 'POST':
+
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/review"
         # Get dealers from the URL
         reviews = post_request(url, json_payload)
@@ -134,5 +136,5 @@ def add_review(request, dealer_id):
         reviews_list  = []
         reviews_list.append([review.review.review for review in reviews])
         # Return a list of dealer short name
-        return HttpResponse(reviews_list)
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
