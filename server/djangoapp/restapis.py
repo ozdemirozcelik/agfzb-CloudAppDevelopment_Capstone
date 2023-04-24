@@ -1,7 +1,7 @@
 import requests
 import json
 # import related models here
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
 
@@ -56,7 +56,7 @@ def get_dealers_from_cf(url, **kwargs):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
 
-def get_dealer_reviews_from_cf(url, dealerId=dealer_id):
+def get_dealer_reviews_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
     json_result = get_request(url)
@@ -68,7 +68,10 @@ def get_dealer_reviews_from_cf(url, dealerId=dealer_id):
             # Create a DealerReview object
             review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
                                    car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
-                                   sentiment=review["sentiment"], id=review["id"])
+                                   id=review["id"], name=review["name"])
+            # review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
+            #                        car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
+            #                        id=review["id"], name=review["name"])
             results.append(review_obj)
 
     return results
@@ -77,6 +80,22 @@ def get_dealer_reviews_from_cf(url, dealerId=dealer_id):
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(text):
+
+    # Get environment variables
+    url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/dabaa507-af4d-4cdf-9bb4-c044b6d313a7"
+    api_key = os.environ.get('API_KEY')
+
+    sentiment = ""
+
+    if api_key:
+       # Basic authentication GET
+       requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', api_key))
+     else:
+       # no authentication GET
+       request.get(url, params=params)
+    
+    return sentiment
 
 
 
