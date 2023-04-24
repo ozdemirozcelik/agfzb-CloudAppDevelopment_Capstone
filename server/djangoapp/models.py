@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 
 
+
 # Create your models here.
 
 # <HINT> Create a Car Make model `class CarMake(models.Model)`:
@@ -77,8 +78,9 @@ class CarDealer:
 
 class DealerReview:
 
-    # def __init__(self, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
-    def __init__(self, name, purchase, review, purchase_date, car_make, car_model, car_year, id):
+    def __init__(self, _id, _rev, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
+        self._id = _id
+        self._rev = _rev
         self.name = name
         self.purchase = purchase
         self.review = review
@@ -86,7 +88,7 @@ class DealerReview:
         self.car_make = car_make
         self.car_model = car_model
         self.car_year = car_year
-        # self.sentiment = sentiment
+        self.sentiment = sentiment
         self.id = id
 
     def __str__(self):

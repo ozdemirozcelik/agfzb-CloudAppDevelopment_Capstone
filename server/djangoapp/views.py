@@ -9,7 +9,8 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
+from django.forms.models import model_to_dict
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -101,6 +102,31 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(reviews_list)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    review={}
+    review["time"] = datetime.utcnow().isoformat()
+    review["dealership"] = 15
+    review["review"] = "This is a great car dealer"
+
+    url1 = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/reviews?dealerId=" + str(dealer_id)
+    # Get dealers from the URL
+    reviews = get_dealer_reviews_from_cf(url1, dealer_id)
+    data =  reviews[0]
+    data.review = "This is a great car dealer"
+    json_payload = json.dumps(data.__dict__)
+
+    if request.user.is_authenticated:
+        print("***user is authent.")
+    
+    if request.method == "GET":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/efdde710-d7aa-41ae-8ef8-627df2a6a5bc/api/review"
+        # Get dealers from the URL
+        reviews = post_request(url, json_payload)
+        # Concat all dealer's short name
+        print("***")
+        print(reviews)
+        reviews_list  = []
+        reviews_list.append([review.review.review for review in reviews])
+        # Return a list of dealer short name
+        return HttpResponse(reviews_list)
 

@@ -1,4 +1,4 @@
-import requests
+import requests, os
 import json
 # import related models here
 from .models import CarDealer, DealerReview
@@ -12,21 +12,47 @@ from requests.auth import HTTPBasicAuth
 def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
+
+    # params["text"] = kwargs["text"]
+    # params["version"] = kwargs["version"]
+    # params["features"] = kwargs["features"]
+    # params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+
     try:
+        # print("***")
+        # if kwargs["api_key"]:
+        #     # Basic authentication GET
+        #     response = requests.get(url, params=kwargs, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', api_key))
+        # else:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
+        response = requests.get(url, headers={'Content-Type': 'application/json'}, params=kwargs)
+        status_code = response.status_code
+        print("With status {} ".format(status_code))
+        json_data = json.loads(response.text)
+        return json_data
+
     except:
         # If any error occurs
-        print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
+        print("***Network exception occurred")
+
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
+
+def post_request(url, data):
+    print("POST to {} ".format(url))
+
+    try:
+        response = requests.post(url, headers={'Content-Type': 'application/json'}, json=data)
+        status_code = response.status_code
+        print("With status {} ".format(status_code))
+        json_data = json.loads(response.text)
+        return json_data
+
+    except:
+        # If any error occurs
+        print("***Network exception occurred")
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -66,9 +92,9 @@ def get_dealer_reviews_from_cf(url, dealerId):
         for review in json_result:
             # Get its content in `doc` object
             # Create a DealerReview object
-            review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
+            review_obj = DealerReview(_id = review["_id"], _rev= review["_rev"], purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
                                    car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
-                                   id=review["id"], name=review["name"])
+                                   id=review["id"], name=review["name"], sentiment="neutral")
             # review_obj = DealerReview(purchase=review["purchase"], review=review["review"], purchase_date=review["purchase_date"],
             #                        car_make=review["car_make"], car_model=review["car_model"], car_year=review["car_year"],
             #                        id=review["id"], name=review["name"])
@@ -76,26 +102,41 @@ def get_dealer_reviews_from_cf(url, dealerId):
 
     return results
 
+
+
+
+
+
+
+
+
+
+
+
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
+
 def analyze_review_sentiments(text):
 
     # Get environment variables
     url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/dabaa507-af4d-4cdf-9bb4-c044b6d313a7"
+    # url = "https://api.us-east.natural-language-understanding.watson.cloud.ibm.com/instances/dabaa507-af4d-4cdf-9bb4-c044b6d313a7/v1/analyze?version=2019-07-12"
     api_key = os.environ.get('API_KEY')
+    # version = "2019-07-12"
 
-    sentiment = ""
 
-    if api_key:
-       # Basic authentication GET
-       requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', api_key))
-     else:
-       # no authentication GET
-       request.get(url, params=params)
-    
-    return sentiment
+    params = dict()
+    print(api_key)
+    params["api_key"] = api_key
+    params["text"] = text
+    # params["version"] = kwargs["version"]
+    # params["features"] = kwargs["features"]
+    # params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+    response = get_request(url, params)
 
+    if response:
+        print(response)
 
 
