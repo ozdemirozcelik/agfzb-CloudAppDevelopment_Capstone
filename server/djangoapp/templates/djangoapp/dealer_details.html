@@ -43,13 +43,12 @@
     <!-- Add reviews as cards -->
     {% if reviews %}
     <div class="container">
-        <div class="card-columns">
+        <div class="card-deck">
             {% for review in reviews %}
-                     <div class="card" style="width: 36rem;">
-                      <img class="card-img-left" src="{{MEDIA_URL}}/{{ emoji.neutral }}" width="240px" height="240px"
-                           alt="Course image">
+                     <div class="card mt-5" style="width: 30rem;">
+                      <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png" width="40px" height="40px" alt="image">
                       <div class="card-body bg-light">
-                          <h5 class="card-title">{{ review.car_model }}, <span class="text-success">
+                        <p class="card-text">{{ review.car_make}}, {{ review.car_model }}</p>
                         <p class="card-text">{{ review.review}}</p>
                       </div>
                     </div>
