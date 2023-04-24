@@ -20,7 +20,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="btn btn-link" href="{% url 'djangoapp:dealer_details' 15%}">Reviews</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:dealer_details' reviews.0.dealership %}">Reviews</a>
                     <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                 </li>
@@ -41,13 +41,19 @@
         </div>
     </nav>
     <!-- Add reviews as cards -->
-    <h3>Reviews for {{ reviews.0.name}}</h3>
+    <h3>Reviews for {{ reviews.0.name}} Dealership</h3>
     {% if reviews %}
     <div class="container">
         <div class="card-deck">
             {% for review in reviews %}
                      <div class="card mt-5" style="width: 30rem;">
+                    {% if review.sentiment == "positive" %}
                       <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png" width="40px" height="40px" alt="image">
+                    {% elif review.sentiment == "negative" %}
+                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/negative.png" width="40px" height="40px" alt="image">
+                    {% else %}
+                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png" width="40px" height="40px" alt="image">
+                    {% endif %}
                       <div class="card-body bg-light">
                         <p class="card-text">{{ review.car_make}}, {{ review.car_model }}</p>
                         <p class="card-text">{{ review.review}}</p>

@@ -78,7 +78,7 @@ class CarDealer:
 
 class DealerReview:
 
-    def __init__(self, _id, _rev, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
+    def __init__(self, _id, _rev, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id, dealership):
         self._id = _id
         self._rev = _rev
         self.name = name
@@ -89,6 +89,7 @@ class DealerReview:
         self.car_model = car_model
         self.car_year = car_year
         self.sentiment = sentiment
+        self.dealership = dealership
         self.id = id
 
     def __str__(self):
